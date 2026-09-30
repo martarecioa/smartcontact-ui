@@ -1,0 +1,38 @@
+<app-story-host [meta]="meta" [stories]="stories()" />
+
+<ng-template #playground let-args>
+  <sc-treeselect
+    [label]="args.label"
+    [options]="nodes"
+    [placeholder]="args.placeholder"
+    [helperText]="args.helperText || undefined"
+    [error]="args.error || undefined"
+    [selectionMode]="args.selectionMode"
+    [display]="args.display"
+    [size]="args.size"
+    [required]="args.required"
+    [filter]="args.filter"
+    [showCount]="args.showCount"
+    [showSelectAll]="args.showSelectAll"
+    [showClear]="args.showClear"
+    [disabled]="args.disabled"
+    [(value)]="value"
+  />
+</ng-template>
+
+<ng-template #niveles>
+  <sc-treeselect
+    label="Tipificación"
+    [options]="nodes"
+    placeholder="Selecciona tipificación"
+    data-testid="sc-treeselect"
+  />
+</ng-template>
+
+<ng-template #estados>
+  <div class="col">
+    <sc-treeselect label="Sin contador" [options]="nodes" [showCount]="false" />
+    <sc-treeselect label="Selección simple" [options]="nodes" selectionMode="single" />
+    <sc-treeselect label="Con error" [options]="nodes" error="Selecciona al menos uno" data-testid="sc-treeselect-error" />
+  </div>
+</ng-template>

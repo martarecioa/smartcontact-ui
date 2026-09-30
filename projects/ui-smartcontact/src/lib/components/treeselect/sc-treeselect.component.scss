@@ -1,0 +1,112 @@
+/*
+ * sc-treeselect — Smart Contact tree-select dropdown.
+ *
+ * Wraps <p-treeselect>. Chrome (border, padding, focus, hover, disabled,
+ * invalid) hereda de sc-preset → treeselect.ts / tree.ts (mismo bridge que
+ * sc-multiselect). Este archivo solo añade lo que PrimeNG no expone:
+ * contador por nodo padre y pie «Seleccionar todo».
+ *
+ * Figma reference: Smart Contact Design System, node 15151:82046.
+ */
+
+.sc-treeselect {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sc-spacing-0-5);
+  min-width: 0;
+}
+
+.sc-treeselect__label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sc-spacing-0-5);
+  font-size: var(--sc-font-size-200);
+  font-weight: var(--sc-font-weight-medium);
+  color: var(--sc-text-secondary);
+}
+
+.sc-treeselect__required {
+  color: var(--sc-text-danger);
+  font-weight: var(--sc-font-weight-medium);
+}
+
+.sc-treeselect__field {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+/* `.sc-treeselect__control` ES el <p-treeselect>: no forzar `display`. */
+.sc-treeselect__control {
+  width: 100%;
+  min-width: 0;
+}
+
+/* PrimeNG hardcodea el font-size del label; md = 14px (rampa del Kit). */
+.sc-treeselect__control .p-treeselect-label {
+  font-size: var(--sc-font-size-200);
+}
+
+/* ────────────────────────────────────────────────────────────────────
+ * Contador por nodo padre (Figma `tree-treenode` → texto «3» / «5»).
+ * El componente marca el <li> con `.sc-treeselect__node--parent` y le pone
+ * `counter-set` con el nº de hijos directos. Caja de 24.5px (= toggle size),
+ * texto medium centrado, color `tree.node.color`.
+ * ────────────────────────────────────────────────────────────────────
+ */
+.sc-treeselect-panel .sc-treeselect__node--parent > .p-tree-node-content::after {
+  content: counter(sc-treeselect-count);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  margin-inline-start: auto;
+  min-width: var(--sc-spacing-1-75);
+  height: var(--sc-spacing-1-75);
+  font-size: var(--sc-font-size-200);
+  font-weight: var(--sc-font-weight-medium);
+  color: var(--sc-text-secondary);
+}
+
+/* ────────────────────────────────────────────────────────────────────
+ * Pie «Seleccionar todo»: divider + checkbox + botón texto `info`.
+ * Figma `footer-select-all`: h 40 · px 12 · py 10 · gap 8.
+ * ────────────────────────────────────────────────────────────────────
+ */
+.sc-treeselect__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--sc-spacing-0-5);
+  padding: var(--sc-spacing-0-75) var(--sc-spacing-0-875);
+  border-top: 0.071429rem solid var(--sc-border-default);
+}
+
+/* ────────────────────────────────────────────────────────────────────
+ * Invalid / disabled — mismo tratamiento que sc-multiselect.
+ * ────────────────────────────────────────────────────────────────────
+ */
+.sc-treeselect--invalid .sc-treeselect__control {
+  border-color: var(--sc-border-error);
+
+  &:hover,
+  &:focus,
+  &:focus-within {
+    border-color: var(--sc-border-error);
+  }
+}
+
+.sc-treeselect__msg {
+  display: block;
+  min-height: 1.25em;
+  font-size: var(--sc-font-size-100);
+  line-height: 1.45;
+  color: var(--sc-text-subtle);
+}
+
+.sc-treeselect__msg--error {
+  color: var(--sc-text-danger);
+}
+
+.sc-treeselect--disabled .sc-treeselect__label {
+  color: var(--sc-text-disabled);
+}

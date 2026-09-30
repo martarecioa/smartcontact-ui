@@ -1,0 +1,74 @@
+@if (label()) {
+  <label class="sc-treeselect__label" [attr.for]="resolvedId()">
+    {{ label() }}
+    @if (required()) {
+      <span class="sc-treeselect__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<div class="sc-treeselect__field">
+  <p-treeselect
+    class="sc-treeselect__control"
+    [inputId]="resolvedId()"
+    [options]="optionsMutable()"
+    [selectionMode]="selectionMode()"
+    [metaKeySelection]="false"
+    [display]="display()"
+    [placeholder]="placeholder()"
+    [disabled]="disabled()"
+    [filter]="filter()"
+    [filterPlaceholder]="filterPlaceholder() || undefined"
+    [showClear]="showClear()"
+    [emptyMessage]="emptyMessage()"
+    [size]="pSize()"
+    [panelStyleClass]="panelStyleClass()"
+    [ngModel]="value()"
+    (ngModelChange)="onModelChange($event)"
+    (onBlur)="onBlur()"
+    [attr.name]="name() ?? null"
+    [attr.aria-describedby]="footerText() ? resolvedId() + '-msg' : null"
+    [attr.aria-required]="required() ? true : null"
+    [attr.aria-invalid]="isInvalid() ? true : null"
+  >
+    @if (display() === 'comma') {
+      <ng-template #value let-current let-ph="placeholder">
+        @if (valueLabel(current)) {
+          {{ valueLabel(current) }}
+        } @else {
+          <span class="p-treeselect-label p-placeholder">{{ ph }}</span>
+        }
+      </ng-template>
+    }
+
+    @if (hasSelectAll()) {
+      <ng-template #footer>
+        <div class="sc-treeselect__footer">
+          <sc-checkbox
+            [state]="selectAllState()"
+            [disabled]="disabled()"
+            [ariaLabel]="selectAllLabel()"
+            (cycle)="onSelectAll($event)"
+          />
+          <sc-button
+            variant="info"
+            appearance="text"
+            [label]="selectAllLabel()"
+            [disabled]="disabled()"
+            (clicked)="onSelectAll(selectAllState() !== 'all')"
+          />
+        </div>
+      </ng-template>
+    }
+  </p-treeselect>
+</div>
+
+@if (footerText()) {
+  <span
+    class="sc-treeselect__msg"
+    [class.sc-treeselect__msg--error]="!!error()"
+    [id]="resolvedId() + '-msg'"
+  >
+    {{ footerText() }}
+  </span>
+}

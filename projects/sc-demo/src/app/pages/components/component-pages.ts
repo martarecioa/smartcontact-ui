@@ -120,6 +120,11 @@ export const SC_DEMO_COMPONENT_PAGES = [
     load: () => import('./multiselect/multiselect-demo.component').then((m) => m.MultiSelectDemoComponent),
   },
   {
+    path: 'treeselect',
+    label: 'TreeSelect',
+    load: () => import('./treeselect/treeselect-demo.component').then((m) => m.TreeSelectDemoComponent),
+  },
+  {
     path: 'grouppopover',
     label: 'GroupPopover',
     load: () => import('./grouppopover/grouppopover-demo.component').then((m) => m.GroupPopoverDemoComponent),

@@ -1,6 +1,6 @@
 {
   "generated": "component-audit.mjs",
-  "summary": "49 componentes · 15 custom · 11 standard · 23 extended · 29 usados en Supervisor.",
+  "summary": "50 componentes · 15 custom · 11 standard · 24 extended · 29 usados en Supervisor.",
   "components": [
     {
       "name": "avatar",
@@ -598,6 +598,21 @@
       "nested": [],
       "hasDemo": true,
       "usedInSupervisor": 21
+    },
+    {
+      "name": "treeselect",
+      "selector": "sc-treeselect",
+      "provenance": "WRAPPER",
+      "kind": "EXTENDED",
+      "primengBase": "primeng/treeselect",
+      "cva": true,
+      "inputs": 20,
+      "nested": [
+        "sc-checkbox",
+        "sc-button"
+      ],
+      "hasDemo": true,
+      "usedInSupervisor": 0
     }
   ]
 }

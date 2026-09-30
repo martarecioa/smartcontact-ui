@@ -42,6 +42,7 @@ const CATEGORY: Record<string, ComponentCategory> = {
   select: 'Inputs',
   textarea: 'Inputs',
   toggleswitch: 'Inputs',
+  treeselect: 'Inputs',
   // Datos
   avatar: 'Datos',
   badge: 'Datos',

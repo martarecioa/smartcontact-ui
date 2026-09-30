@@ -25,7 +25,7 @@
 ## Clasificación (auto-generada)
 
 <!-- @audit:components — TABLA GENERADA por `node scripts/component-audit.mjs --write`. NO editar a mano. -->
-**49 componentes** · 15 custom · 11 standard · 23 extended · 29 usados en Supervisor.
+**50 componentes** · 15 custom · 11 standard · 24 extended · 29 usados en Supervisor.
 
 | Componente | Tipo | PrimeNG base | API propia | Anidados | Demo | Usos en Supervisor |
 |---|---|---|---|---|---|---|
@@ -78,6 +78,7 @@
 | `sc-textarea` | EXTENDED | primeng/textarea | 13 inputs | — | ✓ | — |
 | `sc-toast` | EXTENDED | primeng/toast | 6 inputs | — | ✓ | — |
 | `sc-toggleswitch` | EXTENDED | primeng/toggleswitch | 7 inputs | — | ✓ | 21 |
+| `sc-treeselect` | EXTENDED | primeng/treeselect | CVA · 20 inputs | sc-checkbox sc-button | ✓ | — |
 <!-- @audit:components:end -->
 
 ## Gaps abiertos (el consumidor real los necesita; el DS aún no los cubre)

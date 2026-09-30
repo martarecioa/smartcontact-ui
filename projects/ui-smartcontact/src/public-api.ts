@@ -34,6 +34,7 @@ export * from './lib/components/search/sc-search.component';
 export * from './lib/components/datepicker/sc-datepicker.component';
 export * from './lib/components/inputnumber/sc-inputnumber.component';
 export * from './lib/components/multiselect/sc-multiselect.component';
+export * from './lib/components/treeselect/sc-treeselect.component';
 export * from './lib/components/group-popover/sc-group-popover.component';
 export * from './lib/components/column-selector/sc-column-selector.component';
 export * from './lib/components/confirmdialog/sc-confirmdialog.component';
