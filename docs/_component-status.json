@@ -498,7 +498,7 @@
       "kind": "EXTENDED",
       "primengBase": "primeng/select",
       "cva": true,
-      "inputs": 22,
+      "inputs": 24,
       "nested": [],
       "hasDemo": true,
       "usedInSupervisor": 33

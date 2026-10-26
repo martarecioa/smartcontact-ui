@@ -32,6 +32,20 @@
   </sc-select>
 </ng-template>
 
+<ng-template #agrupado>
+  <sc-select
+    label="Prefijo"
+    [options]="prefijos"
+    optionGroupLabel="label"
+    optionGroupChildren="items"
+    optionLabel="label"
+    optionValue="value"
+    [filter]="true"
+    placeholder="Selecciona país"
+    data-testid="sc-select-grouped"
+  />
+</ng-template>
+
 <ng-template #estados>
   <div class="col">
     <sc-select label="Grupo" [options]="groups" placeholder="Selecciona" [(value)]="value" data-testid="sc-select" />

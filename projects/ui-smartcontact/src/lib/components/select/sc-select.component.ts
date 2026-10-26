@@ -108,6 +108,17 @@ export class ScSelectComponent implements ControlValueAccessor {
    * monta el panel en `<body>` y evita el clip. Default null = inline.
    */
   readonly appendTo = input<'body' | null>(null);
+  /**
+   * Key de la etiqueta de cabecera cuando las `options` son grupos
+   * (`[{ label, items: [...] }]`). Activa el modo agrupado de p-select; la
+   * cabecera no es seleccionable. Con `filter`, el texto buscado se compara
+   * contra `filterBy` de cada hijo y los grupos sin coincidencias se ocultan,
+   * así que para que "Canadá" devuelva todo el grupo el label del hijo debe
+   * incluir el nombre del grupo (p.ej. `Canadá (+1873)`).
+   */
+  readonly optionGroupLabel = input<string>();
+  /** Key del array de hijos dentro de cada grupo. */
+  readonly optionGroupChildren = input<string>('items');
   /** Key del flag de opción deshabilitada (passthrough de p-select). */
   readonly optionDisabled = input<string>();
   /** Spinner de carga (passthrough de p-select). */

@@ -21,7 +21,19 @@ const OBJETOS_SNIPPET = `<sc-select
   <ng-template pTemplate="item" let-opt>★ {{ opt.name }}</ng-template>
 </sc-select>`;
 
-const ESTADOS_SNIPPET = `<sc-select label="Con clear + filtro" [options]="groups" [showClear]="true" [filter]="true" placeholder="Buscar…" />
+const AGRUPADO_SNIPPET = `<!-- El label de cada hijo incluye el país: buscar «Canadá» devuelve todo el grupo -->
+<sc-select
+  label="Prefijo"
+  [options]="prefijos"
+  optionGroupLabel="label"
+  optionGroupChildren="items"
+  optionLabel="label"
+  optionValue="value"
+  [filter]="true"
+  placeholder="Selecciona país"
+/>`;
+
+const ESTADOS_SNIPPET =`<sc-select label="Con clear + filtro" [options]="groups" [showClear]="true" [filter]="true" placeholder="Buscar…" />
 <sc-select label="Con error" [options]="groups" error="Selecciona un grupo" />
 <sc-select label="Small" [options]="groups" size="sm" placeholder="sm" />
 <sc-select label="Deshabilitado" [options]="groups" [disabled]="true" placeholder="off" />`;
@@ -36,6 +48,7 @@ const ESTADOS_SNIPPET = `<sc-select label="Con clear + filtro" [options]="groups
 export class SelectDemoComponent {
   protected readonly playgroundTpl = viewChild<TemplateRef<StoryContext>>('playground');
   protected readonly objetosTpl = viewChild<TemplateRef<StoryContext>>('objetos');
+  protected readonly agrupadoTpl = viewChild<TemplateRef<StoryContext>>('agrupado');
   protected readonly estadosTpl = viewChild<TemplateRef<StoryContext>>('estados');
 
   readonly groups = ['Soporte', 'Ventas', 'Postventa', 'Calidad'];
@@ -43,6 +56,17 @@ export class SelectDemoComponent {
     { name: 'Alta', id: 'high' },
     { name: 'Media', id: 'mid' },
     { name: 'Baja', id: 'low' },
+  ];
+  readonly prefijos = [
+    {
+      label: 'Canadá',
+      items: ['+1807', '+1873', '+1879', '+1902', '+1905', '+1942'].map((p) => ({
+        label: `Canadá ( ${p} )`,
+        value: p,
+      })),
+    },
+    { label: 'España', items: [{ label: 'España ( +34 )', value: '+34' }] },
+    { label: 'Francia', items: [{ label: 'Francia ( +33 )', value: '+33' }] },
   ];
   readonly value = signal<string>('');
 
@@ -84,6 +108,8 @@ export class SelectDemoComponent {
       { name: 'options', type: 'unknown[]', default: '[]', description: 'string[] u objetos.' },
       { name: 'optionLabel', type: 'string', default: "'label'", description: 'Clave de la etiqueta (objetos).' },
       { name: 'optionValue', type: 'string', default: '—', description: 'Clave del valor (objetos).' },
+      { name: 'optionGroupLabel', type: 'string', default: '—', description: 'Activa el modo agrupado: clave de la cabecera del grupo.' },
+      { name: 'optionGroupChildren', type: 'string', default: "'items'", description: 'Clave del array de hijos de cada grupo.' },
       { name: 'label', type: 'string', default: '—' },
       { name: 'placeholder', type: 'string', default: "''" },
       { name: 'size', type: 'ScSelectSize', default: "'md'", description: 'sm · md · lg' },
@@ -104,11 +130,13 @@ export class SelectDemoComponent {
   protected readonly stories = computed<readonly StoryDef[]>(() => {
     const pg = this.playgroundTpl();
     const ob = this.objetosTpl();
+    const ag = this.agrupadoTpl();
     const es = this.estadosTpl();
-    if (!pg || !ob || !es) return [];
+    if (!pg || !ob || !ag || !es) return [];
     return [
       { name: 'Playground', playground: true, template: pg },
       { name: 'Objetos + pTemplate', template: ob, snippet: OBJETOS_SNIPPET },
+      { name: 'Agrupado + filtro', template: ag, snippet: AGRUPADO_SNIPPET },
       { name: 'Estados y tamaños', template: es, snippet: ESTADOS_SNIPPET },
     ];
   });
