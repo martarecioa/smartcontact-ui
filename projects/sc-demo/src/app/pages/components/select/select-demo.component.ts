@@ -21,7 +21,7 @@ const OBJETOS_SNIPPET = `<sc-select
   <ng-template pTemplate="item" let-opt>★ {{ opt.name }}</ng-template>
 </sc-select>`;
 
-const AGRUPADO_SNIPPET = `<!-- El label de cada hijo incluye el país: buscar «Canadá» devuelve todo el grupo -->
+const AGRUPADO_SNIPPET = `<!-- Cada hijo lleva \`country\` y \`label\` (el prefijo); filterBy busca en ambos: «Canadá» o «1873» -->
 <sc-select
   label="Prefijo"
   [options]="prefijos"
@@ -29,9 +29,12 @@ const AGRUPADO_SNIPPET = `<!-- El label de cada hijo incluye el país: buscar «
   optionGroupChildren="items"
   optionLabel="label"
   optionValue="value"
+  filterBy="label,country"
   [filter]="true"
   placeholder="Selecciona país"
-/>`;
+>
+  <ng-template pTemplate="selectedItem" let-opt>{{ opt.country }} ( {{ opt.label }} )</ng-template>
+</sc-select>`;
 
 const ESTADOS_SNIPPET =`<sc-select label="Con clear + filtro" [options]="groups" [showClear]="true" [filter]="true" placeholder="Buscar…" />
 <sc-select label="Con error" [options]="groups" error="Selecciona un grupo" />
@@ -57,17 +60,18 @@ export class SelectDemoComponent {
     { name: 'Media', id: 'mid' },
     { name: 'Baja', id: 'low' },
   ];
+  /** Prefijos independientes por país: cada fila lleva `country` aparte para filtrar por él sin repetirlo en pantalla. */
   readonly prefijos = [
-    {
-      label: 'Canadá',
-      items: ['+1807', '+1873', '+1879', '+1902', '+1905', '+1942'].map((p) => ({
-        label: `Canadá ( ${p} )`,
-        value: p,
-      })),
-    },
-    { label: 'España', items: [{ label: 'España ( +34 )', value: '+34' }] },
-    { label: 'Francia', items: [{ label: 'Francia ( +33 )', value: '+33' }] },
+    { label: 'Canadá', items: this.prefijosDe('Canadá', ['1428', '1431', '1437', '1438', '1450', '1460', '1807', '1873', '1879', '1902', '1905', '1942']) },
+    { label: 'España', items: this.prefijosDe('España', ['34']) },
+    { label: 'Reino Unido', items: this.prefijosDe('Reino Unido', ['44']) },
+    { label: 'República Dominicana', items: this.prefijosDe('República Dominicana', ['1809', '1829', '1849']) },
+    { label: 'Rumania', items: this.prefijosDe('Rumania', ['40']) },
   ];
+
+  private prefijosDe(country: string, prefijos: string[]) {
+    return prefijos.map((p) => ({ country, label: `+${p}`, value: `+${p}` }));
+  }
   readonly value = signal<string>('');
 
   protected readonly meta: StoryMeta = {

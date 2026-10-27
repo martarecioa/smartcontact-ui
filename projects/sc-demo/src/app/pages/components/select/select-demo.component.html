@@ -40,10 +40,13 @@
     optionGroupChildren="items"
     optionLabel="label"
     optionValue="value"
+    filterBy="label,country"
     [filter]="true"
     placeholder="Selecciona país"
     data-testid="sc-select-grouped"
-  />
+  >
+    <ng-template pTemplate="selectedItem" let-opt>{{ opt.country }} ( {{ opt.label }} )</ng-template>
+  </sc-select>
 </ng-template>
 
 <ng-template #estados>
