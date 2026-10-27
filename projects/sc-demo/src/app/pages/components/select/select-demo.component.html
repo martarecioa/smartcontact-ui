@@ -49,6 +49,31 @@
   </sc-select>
 </ng-template>
 
+<ng-template #mixto>
+  <sc-select
+    label="Prefijo"
+    [options]="prefijosMixto"
+    optionLabel="label"
+    optionValue="value"
+    optionDisabled="isHeader"
+    filterBy="keywords"
+    [filter]="true"
+    placeholder="Selecciona país"
+    data-testid="sc-select-mixed"
+  >
+    <ng-template pTemplate="item" let-opt>
+      @if (opt.kind === 'header') {
+        <strong>{{ opt.country }}</strong>
+      } @else if (opt.kind === 'prefix') {
+        <span class="prefix-row">{{ opt.prefix }}</span>
+      } @else {
+        {{ opt.country }} ( {{ opt.prefix }} )
+      }
+    </ng-template>
+    <ng-template pTemplate="selectedItem" let-opt>{{ opt.country }} ( {{ opt.prefix }} )</ng-template>
+  </sc-select>
+</ng-template>
+
 <ng-template #estados>
   <div class="col">
     <sc-select label="Grupo" [options]="groups" placeholder="Selecciona" [(value)]="value" data-testid="sc-select" />
