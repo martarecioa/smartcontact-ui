@@ -63,14 +63,14 @@
   >
     <ng-template pTemplate="item" let-opt>
       @if (opt.kind === 'header') {
-        <strong>{{ opt.country }}</strong>
+        <strong>{{ opt.flag }} {{ opt.country }}</strong>
       } @else if (opt.kind === 'prefix') {
         <span class="prefix-row">{{ opt.prefix }}</span>
       } @else {
-        {{ opt.country }} ( {{ opt.prefix }} )
+        {{ opt.flag }} {{ opt.country }} ( {{ opt.prefix }} )
       }
     </ng-template>
-    <ng-template pTemplate="selectedItem" let-opt>{{ opt.country }} ( {{ opt.prefix }} )</ng-template>
+    <ng-template pTemplate="selectedItem" let-opt>{{ opt.flag }} {{ opt.country }} ( {{ opt.prefix }} )</ng-template>
   </sc-select>
 </ng-template>
 

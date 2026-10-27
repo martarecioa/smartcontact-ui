@@ -49,11 +49,11 @@ const MIXTO_SNIPPET = `<!-- Lista plana: cabecera (deshabilitada) solo si el pa�
   placeholder="Selecciona país"
 >
   <ng-template pTemplate="item" let-opt>
-    @if (opt.kind === 'header') { <strong>{{ opt.country }}</strong> }
+    @if (opt.kind === 'header') { <strong>{{ opt.flag }} {{ opt.country }}</strong> }
     @else if (opt.kind === 'prefix') { <span class="prefix-row">{{ opt.prefix }}</span> }
-    @else { {{ opt.country }} ( {{ opt.prefix }} ) }
+    @else { {{ opt.flag }} {{ opt.country }} ( {{ opt.prefix }} ) }
   </ng-template>
-  <ng-template pTemplate="selectedItem" let-opt>{{ opt.country }} ( {{ opt.prefix }} )</ng-template>
+  <ng-template pTemplate="selectedItem" let-opt>{{ opt.flag }} {{ opt.country }} ( {{ opt.prefix }} )</ng-template>
 </sc-select>`;
 
 const ESTADOS_SNIPPET =`<sc-select label="Con clear + filtro" [options]="groups" [showClear]="true" [filter]="true" placeholder="Buscar…" />
@@ -92,13 +92,13 @@ export class SelectDemoComponent {
   ];
 
   /** Lista plana como la devolvería la API: una fila por (país, prefijo). */
-  private readonly telefonos: { country: string; prefix: string }[] = [
-    ...['+1428', '+1431', '+1437', '+1438', '+1450', '+1460', '+1807', '+1873', '+1879', '+1902', '+1905', '+1942'].map((prefix) => ({ country: 'Canadá', prefix })),
-    { country: 'España', prefix: '+34' },
-    { country: 'Francia', prefix: '+33' },
-    { country: 'Reino Unido', prefix: '+44' },
-    ...['+1809', '+1829', '+1849'].map((prefix) => ({ country: 'República Dominicana', prefix })),
-    { country: 'Rumania', prefix: '+40' },
+  private readonly telefonos: { country: string; flag: string; prefix: string }[] = [
+    ...['+1428', '+1431', '+1437', '+1438', '+1450', '+1460', '+1807', '+1873', '+1879', '+1902', '+1905', '+1942'].map((prefix) => ({ country: 'Canadá', flag: '🇨🇦', prefix })),
+    { country: 'España', flag: '🇪🇸', prefix: '+34' },
+    { country: 'Francia', flag: '🇫🇷', prefix: '+33' },
+    { country: 'Reino Unido', flag: '🇬🇧', prefix: '+44' },
+    ...['+1809', '+1829', '+1849'].map((prefix) => ({ country: 'República Dominicana', flag: '🇩🇴', prefix })),
+    { country: 'Rumania', flag: '🇷🇴', prefix: '+40' },
   ];
 
   /**
@@ -108,16 +108,20 @@ export class SelectDemoComponent {
    */
   readonly prefijosMixto = (() => {
     const byCountry = new Map<string, string[]>();
-    for (const t of this.telefonos) byCountry.set(t.country, [...(byCountry.get(t.country) ?? []), t.prefix]);
+    const flags = new Map<string, string>();
+    for (const t of this.telefonos) {
+      byCountry.set(t.country, [...(byCountry.get(t.country) ?? []), t.prefix]);
+      flags.set(t.country, t.flag);
+    }
     const out: Record<string, unknown>[] = [];
     for (const [country, prefixes] of byCountry) {
       if (prefixes.length === 1) {
-        out.push({ kind: 'single', country, prefix: prefixes[0], label: `${country} ( ${prefixes[0]} )`, value: prefixes[0], keywords: `${country} ${prefixes[0]}`, isHeader: false });
+        out.push({ kind: 'single', country, flag: flags.get(country), prefix: prefixes[0], label: `${country} ( ${prefixes[0]} )`, value: prefixes[0], keywords: `${country} ${prefixes[0]}`, isHeader: false });
         continue;
       }
-      out.push({ kind: 'header', country, label: country, value: `header:${country}`, keywords: `${country} ${prefixes.join(' ')}`, isHeader: true });
+      out.push({ kind: 'header', country, flag: flags.get(country), label: country, value: `header:${country}`, keywords: `${country} ${prefixes.join(' ')}`, isHeader: true });
       for (const prefix of prefixes) {
-        out.push({ kind: 'prefix', country, prefix, label: prefix, value: prefix, keywords: `${country} ${prefix}`, isHeader: false });
+        out.push({ kind: 'prefix', country, flag: flags.get(country), prefix, label: prefix, value: prefix, keywords: `${country} ${prefix}`, isHeader: false });
       }
     }
     return out;
