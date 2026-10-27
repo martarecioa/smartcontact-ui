@@ -1,0 +1,115 @@
+<div class="psd" role="search">
+  <div class="psd__filters">
+    <sc-select
+      class="psd__country"
+      [options]="countries"
+      optionLabel="name"
+      filterBy="keywords"
+      [filter]="true"
+      placeholder="Selecciona país"
+      emptyFilterMessage="Sin resultados"
+      [disabled]="!msisdnMode()"
+      [value]="country()"
+      (valueChange)="onCountry($event)"
+      data-testid="psd-country"
+    >
+      <ng-template pTemplate="item" let-c>
+        <span class="psd__flag">{{ c.flag }}</span> {{ c.name }}
+        <span class="psd__sub">( {{ prefixCount(c) }} )</span>
+      </ng-template>
+      <ng-template pTemplate="selectedItem" let-c>
+        <span class="psd__flag">{{ c.flag }}</span> {{ c.name }}
+      </ng-template>
+    </sc-select>
+
+    <p-autocomplete
+      #prefixAc
+      class="psd__prefix"
+      inputStyleClass="psd__prefix-input"
+      placeholder="+34"
+      ariaLabel="Prefijo (puedes escribirlo)"
+      [ngModel]="prefix()"
+      (ngModelChange)="onPrefixModel($event)"
+      [disabled]="!msisdnMode()"
+      [suggestions]="suggestions()"
+      (completeMethod)="searchPrefix($event)"
+      (onSelect)="onPrefixSelect($event)"
+      (onBlur)="onPrefixBlur()"
+      [dropdown]="true"
+      dropdownMode="blank"
+      [completeOnFocus]="true"
+      [minLength]="0"
+      [showEmptyMessage]="true"
+      emptyMessage="Escribe un prefijo o elige un país"
+      scrollHeight="440px"
+      data-testid="psd-prefix"
+    >
+      <ng-template #item let-p>
+        <span class="psd__flag">{{ countryOf(p)?.flag }}</span> {{ p }}
+        <span class="psd__sub">{{ countryOf(p)?.name }}</span>
+      </ng-template>
+    </p-autocomplete>
+
+    <sc-select
+      class="psd__type"
+      [options]="types"
+      optionLabel="label"
+      optionValue="value"
+      [value]="type()"
+      (valueChange)="onType($event)"
+      data-testid="psd-type"
+    />
+
+    <sc-inputgroup class="psd__query">
+      <input
+        #queryInput
+        pInputText
+        inputmode="numeric"
+        [placeholder]="msisdnMode() ? 'Buscar' : 'Nº de ticket'"
+        aria-label="Valor a buscar"
+        [ngModel]="number()"
+        (ngModelChange)="number.set($event)"
+        (keydown.enter)="search()"
+        data-testid="psd-query"
+      />
+      <sc-button icon="search" iconAriaLabel="Buscar" (clicked)="search()" data-testid="psd-go" />
+    </sc-inputgroup>
+  </div>
+
+  @if (error(); as msg) {
+    <sc-message class="psd__error" severity="danger" [text]="msg" data-testid="psd-error" />
+  }
+
+  @switch (status()) {
+    @case ('loading') {
+      <div class="psd__loading"><sc-progressspinner /></div>
+    }
+    @case ('results') {
+      <table class="psd__table" data-testid="psd-results">
+        <thead>
+          <tr><th>Ticket</th><th>Msisdn</th><th>País</th><th>Canal</th><th>Estado</th><th>Fecha</th></tr>
+        </thead>
+        <tbody>
+          @for (t of results(); track t.id) {
+            <tr>
+              <td>{{ t.id }}</td>
+              <td>{{ t.msisdn }}</td>
+              <td>{{ countryOfNumber(t.msisdn)?.flag }} {{ countryOfNumber(t.msisdn)?.name }}</td>
+              <td>{{ t.channel }}</td>
+              <td>{{ t.status }}</td>
+              <td>{{ t.date }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+    @case ('empty') {
+      <div class="psd__empty" role="status" data-testid="psd-empty">
+        <h3>No encontramos resultados</h3>
+        <p>Revisa el número introducido o cambia los filtros.</p>
+        <p class="psd__why">{{ why() }}</p>
+        <sc-button label="Limpiar filtros" (clicked)="clear()" data-testid="psd-clear" />
+      </div>
+    }
+  }
+</div>

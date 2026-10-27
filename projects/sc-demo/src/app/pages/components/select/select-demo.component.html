@@ -74,6 +74,10 @@
   </sc-select>
 </ng-template>
 
+<ng-template #busqueda>
+  <app-prefix-search-demo />
+</ng-template>
+
 <ng-template #estados>
   <div class="col">
     <sc-select label="Grupo" [options]="groups" placeholder="Selecciona" [(value)]="value" data-testid="sc-select" />

@@ -9,6 +9,7 @@ import {
 import { PrimeTemplate } from 'primeng/api';
 
 import { ScSelectComponent } from '../../../../../../ui-smartcontact/src/public-api';
+import { PrefixSearchDemoComponent } from './prefix-search-demo.component';
 import { StoryContext, StoryDef, StoryHostComponent, StoryMeta } from '../../../storybook';
 
 const OBJETOS_SNIPPET = `<sc-select
@@ -56,6 +57,20 @@ const MIXTO_SNIPPET = `<!-- Lista plana: cabecera (deshabilitada) solo si el pa�
   <ng-template pTemplate="selectedItem" let-opt>{{ opt.flag }} {{ opt.country }} ( {{ opt.prefix }} )</ng-template>
 </sc-select>`;
 
+const BUSQUEDA_SNIPPET = `<!-- País (sc-select) + prefijo editable (p-autocomplete) + tipo + buscador -->
+<sc-select [options]="countries" optionLabel="name" filterBy="keywords" [filter]="true"
+           [value]="country()" (valueChange)="onCountry($event)" />
+
+<p-autocomplete [ngModel]="prefix()" (ngModelChange)="onPrefixModel($event)"
+                [suggestions]="suggestions()" (completeMethod)="searchPrefix($event)"
+                (onSelect)="onPrefixSelect($event)"
+                [dropdown]="true" dropdownMode="blank" [completeOnFocus]="true" [minLength]="0" />
+
+<sc-inputgroup>
+  <input pInputText [ngModel]="number()" (ngModelChange)="number.set($event)" (keydown.enter)="search()" />
+  <sc-button icon="search" iconAriaLabel="Buscar" (clicked)="search()" />
+</sc-inputgroup>`;
+
 const ESTADOS_SNIPPET =`<sc-select label="Con clear + filtro" [options]="groups" [showClear]="true" [filter]="true" placeholder="Buscar…" />
 <sc-select label="Con error" [options]="groups" error="Selecciona un grupo" />
 <sc-select label="Small" [options]="groups" size="sm" placeholder="sm" />
@@ -64,7 +79,7 @@ const ESTADOS_SNIPPET =`<sc-select label="Con clear + filtro" [options]="groups"
 /** Demo de `sc-select` en formato story (motor «Storybook-like»). */
 @Component({
   selector: 'app-select-demo',
-  imports: [ScSelectComponent, PrimeTemplate, StoryHostComponent],
+  imports: [ScSelectComponent, PrimeTemplate, StoryHostComponent, PrefixSearchDemoComponent],
   templateUrl: './select-demo.component.html',
   styles: [`.prefix-row { padding-left: var(--sc-spacing-0-875); }`],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -74,6 +89,7 @@ export class SelectDemoComponent {
   protected readonly objetosTpl = viewChild<TemplateRef<StoryContext>>('objetos');
   protected readonly agrupadoTpl = viewChild<TemplateRef<StoryContext>>('agrupado');
   protected readonly mixtoTpl = viewChild<TemplateRef<StoryContext>>('mixto');
+  protected readonly busquedaTpl = viewChild<TemplateRef<StoryContext>>('busqueda');
   protected readonly estadosTpl = viewChild<TemplateRef<StoryContext>>('estados');
 
   readonly groups = ['Soporte', 'Ventas', 'Postventa', 'Calidad'];
@@ -194,13 +210,15 @@ export class SelectDemoComponent {
     const ob = this.objetosTpl();
     const ag = this.agrupadoTpl();
     const mx = this.mixtoTpl();
+    const bq = this.busquedaTpl();
     const es = this.estadosTpl();
-    if (!pg || !ob || !ag || !mx || !es) return [];
+    if (!pg || !ob || !ag || !mx || !bq || !es) return [];
     return [
       { name: 'Playground', playground: true, template: pg },
       { name: 'Objetos + pTemplate', template: ob, snippet: OBJETOS_SNIPPET },
       { name: 'Agrupado + filtro', template: ag, snippet: AGRUPADO_SNIPPET },
       { name: 'Mixto: cabecera solo si hay varios', template: mx, snippet: MIXTO_SNIPPET },
+      { name: 'Búsqueda: país + prefijo editable', template: bq, snippet: BUSQUEDA_SNIPPET },
       { name: 'Estados y tamaños', template: es, snippet: ESTADOS_SNIPPET },
     ];
   });
